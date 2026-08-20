@@ -19,6 +19,7 @@
 %
 % VALIDATION
 % check .json file formatting by opening in a web browser - should appear as a nice table without any errors
+%
 
 
 %% ALL BIDS REQUIRE THE FOLLOWING FILES__________________________
