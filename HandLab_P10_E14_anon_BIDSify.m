@@ -11,15 +11,15 @@ epoch = 2.0;                                                            % 1000ms
 maxtimes = [-1, 0.99975];                                               % maximum timestamps - remove data beyond these limits
 samplehz = 4000;
 samples = epoch.*samplehz;
-ps =  [       1,       2,      3,        4,        5,      6,        7,      8         9,     10,      11,        12]; % Participant number
-hs =  [       1,    1500,   1501,     1502,     1503,   1504,     1505,   1506,     1507,   1508,     1509,     1510]; % subject H numbers
+ps =  [       1,       2,      3,        4,        5,      6,        7,      8         9,     10,       11,       12]; % Participant number
+hs =  [     NaN,     NaN,    NaN,      NaN,      NaN,    NaN,      NaN,    NaN,      NaN,    NaN,      NaN,      NaN]; % subject H numbers
 age = [      46,      21,     21,       40,       33,     48,       25,     30,       20,     20,       24,       25]; % age in years
 fem = [       0,       0,      0,        1,        0,      1,        1,      1,        0,      1,        0,        0]; % female? 0=male, 1=female
 han = [       2,       0,      2,        2,        2,      2,        2,      2,        2,      2,        2,        2]; % left=0, ambi=1, right=2
 hed = [ 38,36.5;   36,34;  38,38;    36,34;  40,39.5;  38,36;    36,39;  36,38;    42,40;  38,39;    38,39;    37,36;];% size of head in cm, L-R,N-I
 rmt = [      55,      45,     52,       49,       48,     40,       70,    nan,       63,     46,       46,       54]; % resting motor threshold (%MSO)
 amt = [      30,      30,     33,       28,       34,     21,       38,     75,       36,     30,       23,       38]; % active motor threshold (%MSO)
-m1 =  [-5.5,1.5;-5.5,0.5; -5,0.5;     -5,1;     -5,1; -5.5,0;     -6,1;   -5,2;     -5,1; -5,0.5;     -5,1;     -5,1];% M1 location, (RIGHT,ANTERIOR)
+m1 =  [-5.5,1.5;-5.5,0.5; -5,0.5;     -5,1;     -5,1; -5.5,0;     -6,1;   -5,2;     -5,1; -5,0.5;     -5,1;     -5,1]; % M1 location, (RIGHT,ANTERIOR)
 smg=[   -9,-2;   -9,-3;-8.5,-3;-8.5,-2.5;-8.5,-2.5;-9,-3.5;-9.5,-2.5;nan,nan;-8.5,-2.5;-8.5,-3;-8.5,-2.5;-8.5,-2.5];% SMG location, (RIGHT, ANTERIOR)
 trials = 20;                                                            % TMS pulses in total, use variable t as index
 poss = {'M1','SMG'};                                                    % All TMS positions
@@ -117,8 +117,8 @@ nibs_type = {'TMS'};
 stimulator_id = {'Magstim'};
 nibs_element_id = {'Fig8_70mm'};
 stimulus_shape = {'Monophasic'};
-%first_inflection = 'rising'        	% CHECK THIS
-current_direction = {'co-cl'};         	% CHECK THIS
+%first_inflection = 'rising'                % CHECK THIS
+current_direction = {'co-cl'};                 % CHECK THIS
 %electric_field_target = 
 %electric_field_max = 
 stimulus_duration = 0;
@@ -129,7 +129,7 @@ intensity_scaling = {'absolute'};
 %pattern1_frequency = 'n/a';
 %pattern1_duration = 'n/a';
 %pattern1_intensity = 'n/a';
-% stimulus_validation                	% CHECK THIS
+% stimulus_validation                        % CHECK THIS
 subject_feedback = {'n/a'};
 %status
 %status_description
@@ -151,7 +151,7 @@ coordsystem.HeadMeasurementsLandmark = "Vertex";
 coordsystem.HeadMeasurementsAxes = ["lateral", "anterior"];
 coordsystem.HeadMeasurementsUnits = ["cm", "cm"];
 coordsystem.HeadMeasurementsDescription = "measured in a straight line with a flexible tape along the scalp from the vertex, first lateral, then anterior, parallel to the x- and y-axes respectively";
-		
+                
 
 %% START THE PROCESSING__________________________________________________
 for p = ps
@@ -237,42 +237,42 @@ for p = ps
                 
                 
                 %% WRITE THE NIBS TABLE TO FILE__________________________
-		nibs_event_id = {nibs_event_id{1}};
+                nibs_event_id = {nibs_event_id{1}};
                 nibs = table(nibs_event_id, nibs_type, stimulator_id, nibs_element_id, stimulus_shape, current_direction, stimulus_intensity, stimulus_duration, intensity_reference, intensity_scaling, stimulus_count, subject_feedback, stimulus_description);% build the nibs table
                 writetable(nibs, [data_dir,'/',hl_dir,'/',pstr,'/nibs/',pstr,'_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_nibs.tsv'], 'FileType', 'Text', 'Delimiter', '\t');% save nibs.tsv
 
 
                 %% BUILD THE MARKERS FILE________________________________
                 switch po
-		
+                
                     case 1
                         position_label = {'M1_FDI_L'};
                         position_description = {'Optimal scalp location for left hand FDI MEPs'};
-			if isfinite(m1(p,1))
+                        if isfinite(m1(p,1))
                             element_centre_x = m1(p,1);
-			else
-			    element_centre_x = {'n/a'};
-			end
-			if isfinite(m1(p,2))
+                        else
+                            element_centre_x = {'n/a'};
+                        end
+                        if isfinite(m1(p,2))
                             element_centre_y = m1(p,2);
-			else
-			    element_centre_y = {'n/a'};
-			end
+                        else
+                            element_centre_y = {'n/a'};
+                        end
                         target_label = {'M1_FDI_L'};
-			
+                        
                     case 2
                         position_label = {'SMG_L'};
                         position_description = {'Estimated location of SMG_L, based on neuronavigation measurements where available'};
-			if isfinite(smg(p,1))
+                        if isfinite(smg(p,1))
                             element_centre_x = smg(p,1);
-			else
-			    element_centre_x = {'n/a'};
-			end
-			if isfinite(smg(p,2))
+                        else
+                            element_centre_x = {'n/a'};
+                        end
+                        if isfinite(smg(p,2))
                             element_centre_y = smg(p,2);
-			else
-			    element_centre_y = {'n/a'};
-			end
+                        else
+                            element_centre_y = {'n/a'};
+                        end
                         element_centre_x = smg(p,1);
                         element_centre_y = smg(p,2);
                         target_label = {'SMG_L'};
@@ -280,21 +280,21 @@ for p = ps
 
 
                 %% WRITE THE MARKERS TABLE TO FILE_______________________
-		nibs_position_id = {nibs_position_id(1,:)};
+                nibs_position_id = {nibs_position_id(1,:)};
                 markers = table({nibs_position_id(1,:)}, nibs_element_id, position_label, position_description, element_centre_x, element_centre_y, target_label);% build the markers table
                 writetable(markers, [data_dir,'/',hl_dir,'/',pstr,'/nibs/',pstr,'_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_markers.tsv'], 'FileType', 'Text', 'Delimiter', '\t');% save markers.tsv
 
-		
+                
                 %% BUILD THE COORDSYSTEM FILE____________________________
-		coordsystem.HeadDimensions = [hed(p,1), hed(p,2)];
-		coordsystem.HeadMeasurements = [element_centre_x, element_centre_y];
-		coordsystemjson = jsonencode(coordsystem,PrettyPrint=true);
-		
-		
+                coordsystem.HeadDimensions = [hed(p,1), hed(p,2)];
+                coordsystem.HeadMeasurements = [element_centre_x, element_centre_y];
+                coordsystemjson = jsonencode(coordsystem,PrettyPrint=true);
+                
+                
                 %% WRITE THE COORDSYSTEM TO FILE_________________________
-		fid = fopen([data_dir,'/',hl_dir,'/',pstr,'/nibs/',pstr,'_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_coordsystem.json'],'w');
-		fprintf(fid, '%s', coordsystemjson);
-		fclose(fid);
+                fid = fopen([data_dir,'/',hl_dir,'/',pstr,'/nibs/',pstr,'_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_coordsystem.json'],'w');
+                fprintf(fid, '%s', coordsystemjson);
+                fclose(fid);
                 
 
                 %% CONVERT DATA TO EDF+ FORMAT___________________________
