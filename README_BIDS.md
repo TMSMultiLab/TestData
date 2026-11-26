@@ -1,7 +1,12 @@
 %% HOW TO BIDSIFY YOUR DATASET__________________________________
 %
 % GUIDANCE
-% https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electromyography.html
+% READ THESE:
+%   https://bids-specification.readthedocs.io/en/stable/common-principles.html
+%   https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electromyography.html
+%   https://www.edfplus.info/
+%   https://www.biosemi.com/faq/file_format.htm
+%
 % Do not include white spaces in file names: They make scripting harder.
 % Use only letters, numbers, hyphens, and underscores: Some operating systems cannot handle special characters.
 % Do not rely on letter case (UPPERCASE and lowercase): For some operating systems a is the same as A.
@@ -19,7 +24,6 @@
 %
 % VALIDATION
 % check .json file formatting by opening in a web browser - should appear as a nice table without any errors
-%
 
 
 %% ALL BIDS REQUIRE THE FOLLOWING FILES__________________________
@@ -114,8 +118,17 @@
 % EVENTS___________________________________________________
 % https://bids-specification.readthedocs.io/en/stable/modality-agnostic-files/events.html
 % 
-%       [modality]/<matches>_events.json	OPTIONAL				see individual modalities for guidance
-%       [modality]/<matches>_events.tsv
+%       *_events.json				OPTIONAL				see individual modalities for guidance
+%       *_events.tsv				OPTIONAL
+%		onset				REQUIRED				1st column, number, seconds from the start of this acquisition (the first stored datapoint)
+%		duration			REQUIRED				2nd column, number, duration of event, where 0 = an impulse (e.g. TMS)
+
+%		trial_type			OPTIONAL				experimental conditions
+%		response_time			OPTIONAL				in seconds, n/a = missed (relative to stimulus?)
+%		HED				OPTIONAL
+%		stim_file			OPTIONAL				location of stimuli in /stimuli/ directory
+%		channel				OPTIONAL				e.g. EEG/EMG/MEG/NIRS - when a specific channel is associated with the event
+%		[additional columns]		OPTIONAL				any other columns must be described in meta-data file
 
 
 %% ------------------------------------------------------------------------------------------------- %%
@@ -225,3 +238,301 @@
 %
 %
 %	*_photo.<extension>			OPTIONAL				photo of the montage
+
+
+%% ------------------------------------------------------------------------------------------------- %%
+
+%% NIBS BIDS (BEP 037) REQUIRES THE FOLLOWING FILES_______________
+
+%% v6.3 https://github.com/nigelrogasch/nibs-bids/blob/master/specification/nibs-bids.md
+
+% nibs/
+% 	*_coordsystem.json				Coordinate system, fiducials, and anatomical landmarks for the positions in *_markers.tsv
+
+% 	*_nibs.tsv		Temporal parameters	One row per unique stimulation parameter set. The sidecar also holds the device, intensity, and navigation metadata
+%		nibs_event_id				Defined once here, can be reused multiple times in events.tsv
+%		nibs_element_id				
+%		stimulator_id				
+%		intensity_reference
+
+% 	*_nibs.json
+%		ElementSet
+%			ElementID
+%		StimulatorSet
+%			StimulatorID
+%		IntensitySet
+%			IntensityID
+%		IntendedFor				points to the events.tsv in EMG directory
+
+% 	*_markers.tsv		Spatial parameters 	One row per element position
+%		nibs_position_id			Unique set of positions, can be reused multiple times in events.tsv
+%		nibs_element_id
+
+%	*_markers.json
+
+% 	*_events.tsv		Timeline		Only when NIBS is stand-alone
+%		nibs_event_id
+%		nibs_position_id
+%
+% 	*_events.json
+
+%	Optional
+%	*_headshape.<ext>
+%	*_photo.<ext>
+
+% DELIMITERS {"nibs_element_id": {"Delimiter": "|"}}
+
+% FORMATS    {"Format": "number"}
+
+% To read a dataset, take a row of *_events.tsv, follow its nibs_event_id to the temporal parameters in *_nibs.tsv, and follow its nibs_position_id to the placement or placements in *_markers.tsv.
+
+
+% EVENTS_________________________________________________________
+% *_events.tsv / *_events.json (timeline)
+%		onset 				REQUIRED 	number		same as EMG
+%		duration 			REQUIRED 	number		same as EMG
+%		nibs_event_id 			REQUIRED 	string
+%		nibs_position_id 		OPTIONAL 	string
+
+
+% NIBS___________________________________________________________
+% *_nibs.tsv / 
+% 		nibs_event_id 			REQUIRED 	string		must be unique
+%		nibs_type 			REQUIRED 	string		one of: TMS, tES, TUS, PNS
+
+%		stimulator_id 			RECOMMENDED 	string		The device, references StimulatorSet.StimulatorID in *_nibs.json
+%		nibs_element_id 		RECOMMENDED 	string		The coil / element
+%		stimulus_shape 			RECOMMENDED 	string		TMS: Monophasic, Biphasic, and Halfsine (uses first_inflection and current_direction)
+%										TES: Rectangle (uses ramp_up and ramp_down), Sinusoid (uses frequency, starting_phase, and offset), Noise (uses noise_type, frequency_low, frequency_high, and distribution)
+%										TUS: Sinusoid; ANY: Custom (requires stimulus_description)
+
+% THE STIMULUS INTENSITY_________________________________________
+%		stimulus_intensity 		RECOMMENDED 	number		
+%		stimulus_duration 		RECOMMENDED 	number
+%		intensity_reference 		OPTIONAL 	string		rMT, aMT, 1mV, e-field, absolute	References IntensitySet.IntensityID in *_nibs.json
+%		intensity_scaling 		OPTIONAL 	number/string	multiplier of the reference - e.g. 0.8 for 80%; or absolute, when reference is absolute
+
+% THE STIMULUS PATTERN___________________________________________
+%		pattern<index>_count 		OPTIONAL 	number		for pattern1_ the base number of stimuli; for higher-order patterns, the number of repeats of the pattern(n-1)
+%		pattern<index>_interval 	OPTIONAL 	number		onset-to-onset interval between consecutive pattern(n-1) repeats
+%		pattern<index>_frequency 	OPTIONAL 	number		frequency - equal to 1/pattern(n)_interval
+%		pattern<index>_duration 	OPTIONAL 	number		total duration of this layer, *including the interval after the final unit*
+%		pattern<index>_intensity 	OPTIONAL 	number		if intensity changes, then list of intensities separated by | - must equal the count; n/a at the first level
+
+% OTHERS_________________________________________________________
+%		stimulus_count 			OPTIONAL 	number		total number of repeats of the pattern specification to this stimulation position
+%		stimulus_validation 		OPTIONAL 	string		one of: verified, observed, not_verified, unknown
+%		subject_feedback 		OPTIONAL 	string		Participant-reported perception or discomfort
+%		status 				OPTIONAL 	string		Data-quality flag for the row
+%		status_description 		OPTIONAL 	string		Free-text explanation of status
+%		timestamp 			OPTIONAL 	string		ISO 8601 time at which the stimulation occurred or was logged
+%		electric_field_units 		OPTIONAL 	string		units - V/m
+%		electric_field_model_name 	OPTIONAL 	string		source model or system
+%		electric_field_model_version 	OPTIONAL 	string		version
+
+% TMS PARAMETERS_________________________________________________
+%		first_inflection 		OPTIONAL 	string		rising or descending
+%		current_direction 		OPTIONAL 	string		cl	circular coil, single winding, clockwise from above					QUERY HANDLE ORIENTATION HERE
+%										co	circular coil, single winding, counter-clockwise from above
+%										cl-co	figure-of-8 coil, left-right wings
+%										co-cl	figure-of-8-coil, left-right wings
+%										other	requires Levels.other in nibs.json
+%		electric_field_target 		OPTIONAL 	number		electric field at the target site (eg, reported by neuronavigator)
+%		electric_field_max 		OPTIONAL 	number		peak field
+
+
+% TES PARAMETERS_________________________________________________
+%		contact_impedance 		OPTIONAL 	number		measured impedence
+%		measured_current_intensity 	OPTIONAL 	number		device-reported
+%		measured_voltage_intensity 	OPTIONAL 	number		device-reported
+%		current_statistics 		OPTIONAL 	string		summar stats
+
+% TES / TFUS_____________________________________________________
+%		ramp_up 			OPTIONAL 	number		Rectangular: duration in s
+%		ramp_down 			OPTIONAL 	number		Rectangular: duration in s
+%		frequency 			OPTIONAL 	number		Sinusoidal: frequency
+%		starting_phase 			OPTIONAL 	number		Sinusoidal: starting phase
+%		offset 				OPTIONAL 	number		Sinusoidal: constant offset added
+%		noise_type 			OPTIONAL 	string		Noise: spectral character - eg white or pink
+%		frequency_low 			OPTIONAL 	number		Noise: lower band of randomised
+%		frequency_high 			OPTIONAL 	number		Noise: upper band of randomised
+%		distribution 			OPTIONAL 	string		Noise: amplitude distribution
+
+% TUS PARAMETERS_________________________________________________
+%		measured_peak_negative_pressure OPTIONAL 	number		estimated peak
+%		spatial_peak_pulse_average_intensity 	OPTIONALnumber		estimated peak
+%		spatial_peak_temporal_average_intensity OPTIONALnumber		ISPPA
+%		mechanical_index 		OPTIONAL 	number 		ISPTA
+%		thermal_index 			OPTIONAL 	number 		
+
+% OTHERS_________________________________________________________
+% 		stimulus_description 		OPTIONAL 	string		optional - in case the waveform is not described by the above
+
+
+% *_nibs.json
+% A BIDS JSON sidecar that describes each *_nibs.tsv column (LongName, Description, Units, Levels, Delimiter) and carries structured device, intensity, and navigation metadata.
+%		NIBSDescription 		RECOMMENDED 	string		free-text summary
+%		ConcurrentModalities 		RECOMMENDED 	array		e.g., ["eeg"], ["emg"], ["ieeg"], or ["none"]
+%		IntendedFor 			RECOMMENDED 	string or array	BIDS URI or URIs to the *_events.tsv linked to this nibs.tsv
+%		TaskName 			OPTIONAL 	string		name of the task during stimulation
+%		TaskDescription 		OPTIONAL 	string		description
+%		Instructions 			OPTIONAL 	string		to the participant
+%		InstitutionName 		OPTIONAL 	string		where study performed
+%		InstitutionAddress 		OPTIONAL 	string		address
+%		InstitutionalDepartmentName 	OPTIONAL 	string		department
+% 		StimulatorSet 			RECOMMENDED 	array
+%			StimulatorID 		REQUIRED 	string		referenced from stimulator_id
+%			Manufacturer 		RECOMMENDED 	string 		name
+%			ManufacturersModelName 	RECOMMENDED 	string		name
+%			DeviceSerialNumber 	OPTIONAL 	string		SN
+%			SoftwareVersions 	OPTIONAL 	string		control software
+%		ElementSet 			RECOMMENDED 	array
+%			ElementID 		REQUIRED 	string		referenced from nibs_element_id
+%			ElementType 		REQUIRED 	string		coil, electrode, transducer
+%			ModelName 		RECOMMENDED 	string		
+%			SerialNumber 		OPTIONAL 	string
+%
+%			COIL-SPECIFIC
+%			CoilShape 		RECOMMENDED 	string		figure-of-eight, circular
+%			CoilCooling 		OPTIONAL 	string		air, liquid, passive
+%			CoilDiameter 		OPTIONAL 	object
+%				Value		OPTIONAL
+%				Units		OPTIONAL
+%				Description	OPTIONAL
+%			MagneticFieldPeak 	OPTIONAL 	object
+%			MagneticFieldPenetrationDepth 	OPTIONALobject
+%			MagneticFieldGradient 	OPTIONAL 	object 	
+%
+%			ELECTRODE-SPECIFIC
+%			ElectrodeRole 		REQUIRED 	string 		One of anode, cathode, return, ground, other
+%			Shape 			RECOMMENDED 	string 		
+%			ElectrodeSize 		RECOMMENDED 	object 		Size or area
+%				Value
+%				Units
+%				Description
+%			Thickness 		OPTIONAL 	object 		
+%			Material 		OPTIONAL 	string 		Conductive material
+%			ElectrodeContactMedium 	RECOMMENDED 	string 		eg gel, saline, paste, or dry
+%			ElectrodePreparation 	OPTIONAL 	string 		Skin preparation procedure
+%
+%			TRANSDUCER-SPECIFIC
+%			TransducerType 		RECOMMENDED 	string 		One of single-element, phased-array, planar, custom
+%			FocusType 		OPTIONAL 	string 		Focusing method
+%			CarrierFrequency 	RECOMMENDED 	object 		
+%			FocalDepth 		RECOMMENDED 	object 		
+%			ApertureDiameter 	OPTIONAL 	object 		
+%			MaxPeakNegativePressure OPTIONAL 	object 		
+%			MaxMechanicalIndex 	OPTIONAL 	number 		Maximum Mechanical Index
+%			TransducerContactMedium OPTIONAL 	string 		Coupling medium
+%
+%			PHASED-ARRAY-SPECIFIC
+%			NumberOfElements 	OPTIONAL 	number 		Number of array elements
+%			ElementPitch 		OPTIONAL 	object 		Spacing between array elements
+%			ArrayGeometry 		OPTIONAL 	string 		Geometry of the array
+
+%		IntensitySet 			OPTIONAL 	array
+%			IntensityID 		REQUIRED 	string 		Unique identifier, referenced from intensity_reference
+%			Value 			REQUIRED 	number 		Measured value of the reference, for example the resting motor threshold
+%			Units 			REQUIRED 	string 		Units of Value, eg Maximum Stimulator Output or mA
+%			IntensityType 		RECOMMENDED 	string 		Reference endpoint, eg resting_motor, active_motor, phosphene, sensation, pain
+%			Criterion 		RECOMMENDED 	string 		Criterion defining the reference, for example "1 mV MEP" or "perceptible phosphene"
+%			Algorithm 		OPTIONAL 	string 		Estimation procedure, for example "5/10", "PEST", or a staircase
+%			MeasurementMethod	OPTIONAL 	string 		Modality used to assess the response, for example EMG MEP or visual report
+
+
+% *_markers.tsv
+% 		nibs_position_id 		REQUIRED 	string 		Identifier of one element placement (one row). MUST be unique within the file
+%		nibs_element_id 		RECOMMENDED 	string 		Element placed at this position. References ElementSet.ElementID in *_nibs.json, the same key used in *_nibs.tsv
+%		position_label 			RECOMMENDED 	string 		Standardized label for the placement, for example the 10-20 or 10-10 site C3, or a site name such as M1_hand or DLPFC
+%										This can be used in place of coordinates
+%
+%		position_description 		OPTIONAL 	string 		Free-text description of the placement and how it was located
+%										This can be used in place of coordinates
+%
+%		position_group 			OPTIONAL 	string 		Organizational grouping label, for example montage membership. MUST NOT be used for linkage or synchronization
+
+%		These 12 define the position
+%		element_centre_x 		RECOMMENDED 	number 		x coordinate of the centre of the element
+%		element_centre_y 		RECOMMENDED 	number 		y coordinate of the centre of the element
+%		element_centre_z 		RECOMMENDED 	number 		z coordinate of the centre of the element
+%		element_xdir_x 			OPTIONAL 	number 		x component of the element x axis
+%		element_xdir_y 			OPTIONAL 	number 		y component of the element x axis
+%		element_xdir_z 			OPTIONAL 	number 		z component of the element x axis
+%		element_ydir_x 			OPTIONAL 	number 		x component of the element y axis, which runs along the handle or leading edge
+%		element_ydir_y 			OPTIONAL 	number 		y component of the element y axis
+%		element_ydir_z 			OPTIONAL 	number 		z component of the element y axis
+%		element_zdir_x 			OPTIONAL 	number 		x component of the element z axis which points from the element into the head
+%		element_zdir_y 			OPTIONAL 	number 		y component of the element z axis
+%		element_zdir_z 			OPTIONAL 	number 		z component of the element z axis
+
+%		element_distance 		RECOMMENDED 	number 		Physical distance from the element surface to the scalp, for example the thickness of padding, gel, or hair. This is a real, measurable quantity that affects the delivered dose, so it SHOULD be recorded whenever it is known, independently of whether neuronavigation was used
+
+%		target_x 			OPTIONAL 	number 		x coordinate of the intended target, for example a cortical site or an acoustic focus
+%		target_y 			OPTIONAL 	number 		y coordinate of the intended target
+%		target_z 			OPTIONAL 	number 		z coordinate of the intended target
+%		target_label 			OPTIONAL 	string 		Standardized label or anatomical name of the target
+%		peeling_depth 			OPTIONAL 	number 		Depth from the scalp or cortical surface to the target, as reported by a neuronavigation system. It is specific to neuronavigation, is not produced by all systems, and is distinct from element_distance, which is the physical standoff of the element from the scalp
+%		efield_max_x 			OPTIONAL 	number 		x coordinate of the location of maximum electric field, when modelled
+%		efield_max_y 			OPTIONAL 	number 		y coordinate of the location of maximum electric field
+%		efield_max_z 			OPTIONAL 	number 		z coordinate of the location of maximum electric field
+
+
+% *_coordsystem.json
+%		NIBSCoordinateSystem 		REQUIRED 	string 		Coordinate system used for the positions, for example IndividualMRI, MNI152NLin2009cAsym, or CapTrak
+%		NIBSCoordinateUnits 		REQUIRED 	string 		Units of the coordinates, typically mm
+%		NIBSCoordinateSystemDescription RECOMMENDED 	string 		How the coordinate system was defined, including the registration method and what the coordinates represent
+%		NavigationSystem 		OPTIONAL 	object 		Description of the navigation or positioning system. See below
+%			Navigation 		REQUIRED 	boolean 	Whether a navigation, tracking, or positioning system was used
+%			NavigationHardwareType 	RECOMMENDED 	string 		For example optical_tracking, robot, cobot, mechanical_arm
+%			NavigationModelName 	RECOMMENDED 	string 		Vendor or model
+%			NavigationSoftwareVersion OPTIONAL 	string 		Software version
+%			NavigationHardwareSerialNumber 	OPTIONAL string 	Serial number or identifier
+%			NavigationNotes 	OPTIONAL 	string 		Setup notes, for example camera type or calibration procedure
+
+%		IntendedFor 			RECOMMENDED 	string 		BIDS URI to the anatomical file the coordinate system refers to, for example bids::sub-01/anat/sub-01_T1w.nii.gz
+
+%		FiducialsDescription 		OPTIONAL 	string 		How the fiducials were placed relative to anatomical landmarks and how their positions were measured
+%		FiducialsCoordinates 		OPTIONAL 	object 		Labels and 3D positions of the fiducials, each an array of x, y, z in that order
+%			x
+%			y
+%			z
+%		FiducialsCoordinateSystem 	OPTIONAL 	string 		Coordinate system for the fiducials, preferably the same as NIBSCoordinateSystem
+%		FiducialsCoordinateUnits 	OPTIONAL 	string 		Units for the fiducial coordinates. One of m, mm, cm, n/a
+%		FiducialsCoordinateSystemDescription 	OPTIONAL string 	Description of the fiducial coordinate system
+
+%		AnatomicalLandmarkCoordinates 	OPTIONAL 	object 		Labels and 3D positions of anatomical landmarks, each an array of x, y, z in that order
+%			x
+%			y
+%			z
+%		AnatomicalLandmarkCoordinateSystem 	OPTIONAL 	string 	Coordinate system for the anatomical landmarks
+%		AnatomicalLandmarkCoordinateUnits 	OPTIONAL 	string 	Units of the landmark coordinates. One of m, mm, cm, n/a
+%		AnatomicalLandmarkCoordinateSystemDescription 	OPTIONAL string Description of the landmark coordinate system
+%		AnatomicalLandmarkCoordinatesDescription OPTIONAL 	string 	Description of the landmarks, for example NAS for nasion, LPA and RPA for the preauricular points
+%		AnatomicalLandmarkRmsDeviation 	OPTIONAL 	object 		Per-landmark co-registration deviation values
+%		AnatomicalLandmarkRmsDeviationUnits 	OPTIONAL 	string 	Units of the deviation values
+%		AnatomicalLandmarkRmsDeviationDescription 	OPTIONAL 	string 	How the deviation was calculated and for which landmarks
+
+%		HeadMeasurements 		OPTIONAL 	object 		Head measurements taken with a tape from anatomical landmarks, used to locate elements without coordinates. Each value is a numeric array
+%		HeadMeasurementsUnits 		OPTIONAL 	string 		Units for all values in HeadMeasurements, for example mm
+%		HeadMeasurementsDescription 	OPTIONAL 	string 		How the measurements were obtained, including the landmarks used and any conventions
+
+%		DigitizedHeadPoints 		OPTIONAL 	string 		Relative path to the file with digitized head points, for example sub-01_headshape.pos
+%		DigitizedHeadPointsNumber 	OPTIONAL 	number 		Number of digitized head points used during co-registration
+%		DigitizedHeadPointsDescription 	OPTIONAL 	string 		Description of the digitized points
+%		DigitizedHeadPointsUnits 	OPTIONAL 	string 		Units. One of m, mm, cm, n/a
+
+%		TUS-SPECIFIC
+%		TransducerCoordinates 		OPTIONAL 	object 		(TUS) Spatial coordinates of the transducer, and optionally an affine transformation for its orientation
+%		TransducerCoordinateUnits 	OPTIONAL 	string 		(TUS) Units for the transducer coordinates
+%		TransducerCoordinateSystemDescription 	OPTIONAL string 	(TUS) How the transducer coordinate system was defined and aligned with anatomy
+%		TransducerCoordinatesDescription	OPTIONAL string 	(TUS) What the coordinates represent, for example transducer centre, entry point, or beam axis
+%		TransducerRmsDeviation 		OPTIONAL 	number 		(TUS) Deviation of the transducer position or orientation from the planned placement
+%		TransducerRmsDeviationUnits 	OPTIONAL 	string 		(TUS) Units for the deviation
+%		TransducerRmsDeviationDescription 	OPTIONAL string 	(TUS) How the deviation was computed and by which method
+
+
+% OPTIONAL FILES
+% Head shape (*_headshape.<ext>)
+
+
+% Landmark photos (*_photo.<ext>)

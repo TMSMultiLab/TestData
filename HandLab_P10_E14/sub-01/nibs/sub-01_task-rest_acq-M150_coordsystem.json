@@ -1,0 +1,41 @@
+{
+  "NIBSCoordinateSystem": "10:20",
+  "NIBSCoordinateUnits": "cm",
+  "HeadDimensionsAxes": [
+    [
+      "left helix-tragus intersection",
+      "vertex",
+      "right helix-tragus intersection"
+    ],
+    [
+      "inion",
+      "vertex",
+      "nasion"
+    ],
+    [
+      "nasion",
+      "left helix-tragus intersection",
+      "inion",
+      "right helix-tragus intersection",
+      "nasion"
+    ]
+  ],
+  "HeadMeasurementsLandmark": "Vertex",
+  "HeadMeasurementsAxes": [
+    "lateral",
+    "anterior"
+  ],
+  "HeadMeasurementsUnits": [
+    "cm",
+    "cm"
+  ],
+  "HeadMeasurementsDescription": "measured in a straight line with a flexible tape along the scalp from the vertex, first lateral, then anterior, parallel to the x- and y-axes respectively",
+  "HeadDimensions": [
+    38,
+    36.5
+  ],
+  "HeadMeasurements": [
+    -5.5,
+    1.5
+  ]
+}

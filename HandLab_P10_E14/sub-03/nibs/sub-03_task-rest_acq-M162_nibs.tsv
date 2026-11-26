@@ -1,0 +1,2 @@
+nibs_event_id	nibs_type	stimulator_id	nibs_element_id	stimulus_shape	current_direction	stimulus_intensity	stimulus_duration	intensity_reference	intensity_scaling	stimulus_count	subject_feedback	stimulus_description
+spTMS	TMS	Magstim	Fig8_70mm	Monophasic	co-cl	62	0	absolute	absolute	20	n/a	single pulse TMS at 62% MSO

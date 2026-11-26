@@ -1,0 +1,99 @@
+{
+  "StimulatorSet":
+  {  "StimulatorID": "Magstim1",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "200; P/N 3010-00",
+     "DeviceSerialNumber": "81687",
+     "SoftwareVersions": "n/a"
+  },
+  "StimulatorSet":
+  {  "StimulatorID": "Magstim2",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "200; P/N 3010-00",
+     "DeviceSerialNumber": "81686",
+     "SoftwareVersions": "n/a"
+  },
+  "StimulatorSet":
+  {  "StimulatorID": "BiStim module",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "BiStim; P/N 3330-00",
+     "DeviceSerialNumber": "313483",
+     "SoftwareVersions": "n/a"
+  },
+  "StimulatorSet":
+  {  "StimulatorID": "Coil adaptor1",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "P/N 3110-00",
+     "DeviceSerialNumber": "1675",
+     "SoftwareVersions": "n/a"
+  },
+  "StimulatorSet":
+  {  "StimulatorID": "Coil adaptor2",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "P/N 3110-00",
+     "DeviceSerialNumber": "1676",
+     "SoftwareVersions": "n/a"
+  },
+  "StimulatorSet":
+  {  "StimulatorID": "Serial interface1",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "P/N 3901-00",
+     "DeviceSerialNumber": "1056566-044",
+     "SoftwareVersions": "n/a"
+  },
+  "StimulatorSet":
+  {  "StimulatorID": "Serial interface2",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "P/N 3901-00",
+     "DeviceSerialNumber": "1056566-045",
+     "SoftwareVersions": "n/a"
+  },
+  "ElementSet":
+  {  "ElementID": "Fig8_100mm",
+     "ElementType": "coil",
+     "ModelName": "PN: 32810-11",
+     "SerialNumber": "0110",
+     "CoilShape": "figure-of-eight",
+     "CoilCooling": "passive",
+     "CoilDiameter":
+     {	"Value": 100,
+	"Units": "mm",
+	"Description": "Outer diameter of each wing"
+     }
+     "MagneticFieldPeak": "n/a",
+     "MagneticFieldPenetrationDepth": "n/a",
+     "MagneticFieldGradient": "n/a"
+  },
+  "ElementSet":
+  {  "ElementID": "Fig8_70mm",
+     "ElementType": "coil",
+     "ModelName": "custom",
+     "SerialNumber": "ES17264",
+     "CoilShape": "figure-of-eight",
+     "CoilCooling": "passive",
+     "CoilDiameter":
+     {	"Value": 70,
+	"Units": "mm",
+	"Description": "Outer diameter of each wing"
+     }
+     "MagneticFieldPeak": "n/a",
+     "MagneticFieldPenetrationDepth": "n/a",
+     "MagneticFieldGradient": "n/a"
+  },
+  "ElementSet":
+  {  "ElementID": "Fig8_70mm_BI",
+     "ElementType": "coil",
+     "ModelName": "custom",
+     "SerialNumber": "ES17260",
+     "CoilShape": "figure-of-eight, branding iron",
+     "CoilCooling": "passive",
+     "CoilDiameter":
+     {	"Value": 70,
+	"Units": "mm",
+	"Description": "Outer diameter of each wing"
+     }
+     "MagneticFieldPeak": "n/a",
+     "MagneticFieldPenetrationDepth": "n/a",
+     "MagneticFieldGradient": "n/a"
+  },
+}

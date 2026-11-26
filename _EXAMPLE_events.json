@@ -1,0 +1,6 @@
+{
+  "onset": "Start time of the event, from the beginning of the file, in seconds",
+  "duration": "duration of the event in sectons; 0 = pulses",
+  "nibs_event_id": "ID to the event type; spTMS = single-pulse TMS",
+  "nibs_position_id": "ID to the position of the coil"
+}

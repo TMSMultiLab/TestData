@@ -1,0 +1,41 @@
+{
+  "EMGPlacementScheme": "Other",
+  "EMGPlacementSchemeDescription":  "belly of each muscle (palpated), with ~3cm between electrode centres",
+  "EMGReference": "first two channels referenced to styloid process of ulna; second two channels references to lateral epicondyle of humerus",
+  "TaskName":  "pegboard",
+  "TaskDescription": "completing the grooved pegboard with the right hand, rest the left hand",
+  "Instructions": "take pegs and place them in the holes, or move pegs from hole to hole with your right hand only; don't move quickly, just keep moving steadily so that you're always moving your hand",
+  "SamplingFrequency": 4000,
+  "PowerLineFrequency": 50,
+  "RecordingType": "epoched",
+  "SoftwareFilters": "n/a",
+  "EMGChannelCount": 4,
+  "TriggerChannelCount": 1,
+  "HardwareFilters":
+  {  "Highpass filter":
+      {  "Cutoff (Hz)": 10
+      },
+     "Lowpass filter":
+     {  "Cutoff (Hz)": 2000
+     }
+  },
+  "RecordingDuration": 40,
+  "EpochLength": 2,
+  "Manufacturer": "AD Instruments",
+  "ManufacturersModelName": "PowerLab 16/30",
+  "SoftwareVersions":	"LabChart 8",
+  "DeviceSerialNumber":	"1630-0169",
+  "ElectrodeManufacturer": "n/a",
+  "ElectrodeManufacturersModelName": "n/a",
+  "ElectrodeMaterial":	"Ag/AgCl",
+  "ElectrodeType": "nipple, disposable surface electrodes",
+  "EMGGround": "channel-specific",
+  "Gain": "n/a",
+  "InterelectrodeDistance": 3,
+  "Preamplification": "n/a",
+  "SkinPreparation": "alcohol wipe",
+  "SubjectArtefactDescription": "n/a",
+  "InstitutionName": "University of Birmingham",
+  "InstitutionAddress": "University of Birmingham, Edgbaston, Birmingham, B15 2TT, UK",
+  "InstitutionalDepartmentName": "School of Sport, Exercise and Rehabilitation Sciences"
+}

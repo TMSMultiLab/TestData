@@ -1,0 +1,43 @@
+{
+  "NIBSDescription": "Single-pulse TMS over left M1 or left SMG during rest or the pegboard task, at 7 TMS intensities",
+  "ConcurrentModalities":  "emg",
+  "IntendedFor": "sub-01/emg/sub-01_task-pegboard_acq-M130_events.tsv",
+  "TaskName":  "pegboard",
+  "TaskDescription": "completing the grooved pegboard with the right hand, rest the left hand",
+  "Instructions": "take pegs and place them in the holes, or move pegs from hole to hole with your right hand only; don't move quickly, just keep moving steadily so that you're always moving your hand",
+  "InstitutionName": "University of Birmingham",
+  "InstitutionAddress": "University of Birmingham, Edgbaston, Birmingham, B15 2TT, UK",
+  "InstitutionalDepartmentName": "School of Sport, Exercise and Rehabilitation Sciences"
+  "StimulatorSet":
+  {  "StimulatorID": "Magstim1",
+     "Manufacturer": "Magstim",
+     "ManufacturersModelName": "200; P/N 3010-00",
+     "DeviceSerialNumber": "81687",
+     "SoftwareVersions": "n/a"
+  },
+  "ElementSet":
+  {  "ElementID": "Fig8_70mm",
+     "ElementType": "coil",
+     "ModelName": "custom",
+     "SerialNumber": "ES17264",
+     "CoilShape": "figure-of-eight",
+     "CoilCooling": "passive",
+     "CoilDiameter":
+     {	"Value": 70,
+	"Units": "mm",
+	"Description": "Outer diameter of each wing"
+     }
+     "MagneticFieldPeak": "n/a",
+     "MagneticFieldPenetrationDepth": "n/a",
+     "MagneticFieldGradient": "n/a"
+  },
+  "IntensitySet":
+  {  "IntensityID": "Intensity1",
+     "Value": "n/a",
+     "Units": "% maximum stimulator output",
+     "IntensityType": "absolute",
+     "Criterion": "n/a",
+     "Algorithm": "n/a",
+     "MeasurementMethod": "n/a"
+  },
+}
