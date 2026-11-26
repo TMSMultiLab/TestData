@@ -14,7 +14,7 @@ This directory will also contain scripts to process these open datasets allowing
 
 For each dataset included in this repository, there is an anonymised copy of the code used to convert the dataset to BIDS format, for example:
 
-- [HandLab_P10_E14_anon_BIDSify.m](https://github.com/TheHandLab/TestData/blob/main/HandLab_P10_E14_anon_BIDSify.m)
+- [HandLab_P10_E14_anon_BIDSify.m](https://github.com/TMSMultiLab/TestData/blob/main/HandLab_P10_E14_anon_BIDSify.m)
 
 These examples may help you convert your own data to the BIDS format.
 
