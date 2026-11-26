@@ -1,31 +1,48 @@
 # Constructing an open-source test dataset for MEP analyses
 
-This directory will contain a series of scripts to retrieve and reformat open datasets for inclusion into a large, multi-lab open dataset.
+This repository contains:
 
-The dataset will be used to test TMS, EMG, and MEP analysis code.
+- code to convert data from an existing (HandLab) structure to the standard BIDS (-EMG and -NIBS) structure
+- example files for the NIBS-BIDS data struture (currently: Version 6)
+- data in BIDS format
+
+This directory will also contain scripts to process these open datasets allowing analyses of multiple TMS-EMG datasets and to test TMS, EMG, and MEP analysis methods.
 
 ## Guidance
 
-We don't want to store a single massive data file. We want to provide scripts that will allow users to flexibly recreate bespoke test datasets from the existing source data.
+### 1. BIDSifying a dataset
 
-One script per dataset.
+For each dataset included in this repository, there is an anonymised copy of the code used to convert the dataset to BIDS format, for example:
 
-For the first dataset:
+- [HandLab_P10_E14_anon_BIDSify.m](https://github.com/TheHandLab/TestData/blob/main/HandLab_P10_E14_anon_BIDSify.m)
 
-* URL to download the data from
-* Description of the dataset (plain text, context)
-* Details of methods and analysis
-* Data file (2D array, with one EMG epoch per row and one column per sample, e.g., 10000 rows and 2000 columns)
-* Metadata file (2D array, with one row per row of the data file, and one column per metadata variable e.g., 10000 rows and 20 columns)
-* Subjects file (2D array, with one row per subject and one column per subject metadata variable)
+These examples may help you convert your own data to the BIDS format.
+
+### 2. Retrieving TMS-EMG datasets
+
+The best way to download the data is to use git commands to clone the repository to a directory on your local machine. You may also be able to downloard the data directly from the webpage.
+
+### 3. Analysing the dataset
+
+Some example analysis scripts will be shared when ready. We encourage you to develop your own scripts and share back to the repository for others to use.
+
+
+## Notes
+
+### Data analysis format
+
+A common data analysis format may be helpful. Here are notes from a previous analysis attempt (pre-BIDS):
+- Data file (2D array, with one EMG epoch per row and one column per sample, e.g., 10000 rows and 2000 columns)
+- Metadata file (2D array, with one row per row of the data file, and one column per metadata variable e.g., 10000 rows and 20 columns)
+- Subjects file (2D array, with one row per subject and one column per subject metadata variable)
+
+### Development
 
 Future plans:
-* Include all available metadata from the [TMS-RAT](https://tms-rat.org)  - see [notes here](https://github.com/TheHandLab/TMSMultiLab/edit/main/TestData/TMS-RAT.md)
-* Include all available metadata from the NIBS-DAS
-* Include all available metadata from NIBS-BIDS
-* Convert all data to BIDS format
+- Include all available metadata from the [TMS-RAT](https://tms-rat.org)  - see [notes here](https://github.com/TheHandLab/TMSMultiLab/edit/main/TestData/TMS-RAT.md)
+- Include all available metadata from the NIBS-DAS
 
-# TMS-RAT v1.0 metadata compliance
+### TMS-RAT v1.0 metadata compliance
 
 To ensure that analysed data are compliant with the TMS-RAT reporting recommendations, the following metadata should be included with all datasets (where relevant and available!).
 
@@ -59,6 +76,5 @@ M) SEPFrequency/Repetitions, EEGMontage, EEGFeature, EEGValues
 
 N) BurstFrequency, WithinBurstPulses, BetweenBurstInterval, BurstNumber, BetweenTrainInterval, TrainNumber, TMSTaskInterval, RepeatNumber
 
-# NIBS-DAS metadata compliance
+### NIBS-DAS metadata compliance
 
-# NIBS-BIDS metadata compliance
