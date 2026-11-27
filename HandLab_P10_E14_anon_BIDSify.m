@@ -282,17 +282,17 @@ for p = ps
                 %% WRITE THE MARKERS TABLE TO FILE_______________________
                 nibs_position_id = {nibs_position_id(1,:)};
                 markers = table({nibs_position_id(1,:)}, nibs_element_id, position_label, position_description, element_centre_x, element_centre_y, target_label);% build the markers table
-                writetable(markers, [data_dir,'/',hl_dir,'/',pstr,'/nibs/',pstr,'_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_markers.tsv'], 'FileType', 'Text', 'Delimiter', '\t');% save markers.tsv
+                writetable(markers, [data_dir, '/', hl_dir, '/', pstr, '/nibs/', pstr, '_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_markers.tsv'], 'FileType', 'Text', 'Delimiter', '\t');% save markers.tsv
 
                 
                 %% BUILD THE COORDSYSTEM FILE____________________________
                 coordsystem.HeadDimensions = [hed(p,1), hed(p,2)];
                 coordsystem.HeadMeasurements = [element_centre_x, element_centre_y];
-                coordsystemjson = jsonencode(coordsystem,PrettyPrint=true);
+                coordsystemjson = jsonencode(coordsystem, PrettyPrint=true);
                 
                 
                 %% WRITE THE COORDSYSTEM TO FILE_________________________
-                fid = fopen([data_dir,'/',hl_dir,'/',pstr,'/nibs/',pstr,'_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_coordsystem.json'],'w');
+                fid = fopen([data_dir, '/', hl_dir, '/', pstr, '/nibs/', pstr, '_task-', lower(cs{c}), '_acq-', poss{po}, intensity, '_coordsystem.json'],'w');
                 fprintf(fid, '%s', coordsystemjson);
                 fclose(fid);
                 
@@ -345,13 +345,13 @@ for p = ps
                 %% WRITE THE DATA TO EDF+ FILE___________________________
                 % https://uk.mathworks.com/help/signal/ref/edfwrite.html
                 % edfw = edfwrite(fileName, hdr, sigData) % creates an edfwrite object and a new EDF or EDF+ file with signal data, sigData. File properties are specified in the header structure, hdr
-                filename = [data_dir,'/',hl_dir,'/',pstr,'/emg/',pstr,'_task-', lower(cs{c}), '_acq-', poss{po}, tmp([1:2]+offset), '_emg.edf'];
+                filename = [data_dir, '/', hl_dir, '/', pstr, '/emg/', pstr, '_task-', lower(cs{c}), '_acq-', poss{po}, tmp([1:2]+offset), '_emg.edf'];
                 switch hdr.Reserved
                     case "EDF+C"
                         edfw = edfwrite(filename, hdr, data, 'InputSampleType', 'physical');
 
                     case "EDF+D"
-                        edfw = edfwrite(filename, hdr, data, 'InputSampleType', 'physical', 'DataRecordTimes',DataRecordTimes);
+                        edfw = edfwrite(filename, hdr, data, 'InputSampleType', 'physical', 'DataRecordTimes', DataRecordTimes);
                 end
                 
             end                                                         % of intensity loop
